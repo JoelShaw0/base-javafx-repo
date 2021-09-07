@@ -7,7 +7,7 @@ import org.kordamp.ikonli.javafx.FontIcon
 import org.kordamp.ikonli.materialdesign.MaterialDesign
 import tornadofx.*
 
-class ChapterView: View() {
+class ChapterView : View() {
 
     private val nameProperty = SimpleStringProperty()
 
@@ -34,11 +34,11 @@ class ChapterView: View() {
             }
         }
 
-        add(
+        hbox {
             FontIcon(MaterialDesign.MDI_FILE).also {
                 it.iconSize = 100
             }
-        )
+        }
 
         hbox {
             spacing = 20.0
