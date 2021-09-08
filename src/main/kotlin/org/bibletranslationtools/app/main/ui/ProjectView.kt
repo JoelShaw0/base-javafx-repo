@@ -54,11 +54,16 @@ class ProjectView : View() {
                 val selectedItem = this.selectedItem
 
                 this.selectionModel.select(-1)
-                translateTransition(selectedItem as Node) {
+
+//                fadeTransition(this as Node) { }
+
+                moveSelectedItem(selectedItem as Node) {
                     listData.removeAt(index)
                     listData.add(0, selectedItem)
                     this.selectionModel.select(0)
                 }
+
+
             }
         }
 
@@ -78,25 +83,25 @@ class ProjectView : View() {
     }
 
     private fun fadeTransition(node: Node, onFinish: () -> Unit) {
-        val ft = FadeTransition(Duration.millis(600.0), node)
+        val ft = FadeTransition(Duration.millis(800.0), node)
         ft.fromValue = 1.0
         ft.toValue = 0.0
         ft.cycleCount = 2
         ft.isAutoReverse = true
         ft.onFinished = EventHandler {
             onFinish()
-            ft.stop()
+//            ft.stop()
         }
         ft.play()
     }
 
 
 
-    private fun translateTransition(node: Node, onFinish: () -> Unit) {
+    private fun moveSelectedItem(node: Node, onFinish: () -> Unit) {
         node.toFront()
 
         val parentY = node.parent.layoutY
-        val tt = TranslateTransition(Duration.millis(500.0), node)
+        val tt = TranslateTransition(Duration.millis(700.0), node)
         tt.cycleCount = 1
         tt.toY = -parentY
         tt.onFinished = EventHandler {
@@ -106,6 +111,18 @@ class ProjectView : View() {
         tt.play()
     }
 
+    private fun moveSelectedNode(node: Node, onFinish: () -> Unit) {
+        node.toFront()
+        val distance = 40.0
+        val tt = TranslateTransition(Duration.millis(700.0), node)
+        tt.cycleCount = 1
+        tt.byY = distance
+        tt.onFinished = EventHandler {
+//            onFinish()
+            revertTranslateTransition(node, distance) { }
+        }
+        tt.play()
+    }
 
 
     private fun revertTranslateTransition(node: Node, distance: Double, onFinish: () -> Unit) {
@@ -113,7 +130,7 @@ class ProjectView : View() {
 
         val tt = TranslateTransition(Duration.millis(1.0), node)
         tt.cycleCount = 1
-//        tt.byY = 50.0     // revert the distance moved...
+        tt.byY = -50.0     // revert the distance moved...
         tt.onFinished = EventHandler {
             onFinish()
         }

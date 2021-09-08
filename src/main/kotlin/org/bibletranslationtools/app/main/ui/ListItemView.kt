@@ -14,13 +14,6 @@ class ListItemView() : ListCell<ListItemNode>() {
         super.updateItem(itemNode, empty)
         val node = ListItemNode(itemNode?.content ?: "empty")
         graphic = node
-
-        if (itemNode != null) {
-//            val tt = TranslateTransition(Duration.millis(500.0), node)
-//            tt.cycleCount = 1
-//            tt.byY = -10.0
-//            tt.play()
-        }
     }
 }
 
@@ -29,7 +22,7 @@ class ListItemNode(val content: String?) : HBox() {
         prefWidth = 100.0
         prefHeight = 30.0
         add(
-            button {
+            label {
                 text = content
             }
         )
