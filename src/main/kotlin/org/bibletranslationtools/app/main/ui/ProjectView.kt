@@ -36,35 +36,29 @@ class ProjectView : View() {
         paddingAll = 20.0
         alignment = Pos.CENTER
 
-        label("Project Page: Genesis") {
+        label("ListView example:") {
             style {
                 fontWeight = FontWeight.BOLD
             }
         }
 
         listview(listData) {
-//            setMaxSize(200.0, 500.0)
+
             prefHeight = 500.0
 //            setCellFactory {
 //                ListItemView()
 //            }
+
             onMouseClicked = EventHandler {
                 val index = this.selectionModel.selectedIndex
                 val selectedItem = this.selectedItem
 
-//                fadeTransition(selectedItem as Node) {
-//                    listData.removeAt(index)
-//                    listData.add(0, selectedItem)
-//                    this.selectionModel.select(0)
-//                }
-
-//                this.selectionModel.select(-1)
+                this.selectionModel.select(-1)
                 translateTransition(selectedItem as Node) {
                     listData.removeAt(index)
                     listData.add(0, selectedItem)
                     this.selectionModel.select(0)
                 }
-
             }
         }
 
@@ -83,11 +77,6 @@ class ProjectView : View() {
         nameProperty.bind(mainViewModel.activeBookProperty)
     }
 
-    override fun onDock() {
-        super.onDock()
-        navigator.dock(this, breadCrumb)
-    }
-
     private fun fadeTransition(node: Node, onFinish: () -> Unit) {
         val ft = FadeTransition(Duration.millis(600.0), node)
         ft.fromValue = 1.0
@@ -101,24 +90,30 @@ class ProjectView : View() {
         ft.play()
     }
 
+
+
     private fun translateTransition(node: Node, onFinish: () -> Unit) {
         node.toFront()
-        val bound = node.localToScene(node.boundsInLocal)
+
+        val parentY = node.parent.layoutY
         val tt = TranslateTransition(Duration.millis(500.0), node)
         tt.cycleCount = 1
-        tt.byY = -50.0
+        tt.toY = -parentY
         tt.onFinished = EventHandler {
             onFinish()
-            revertTranslateTransition(node) { }
+//            revertTranslateTransition(node, boundY) { }
         }
         tt.play()
     }
-    private fun revertTranslateTransition(node: Node, onFinish: () -> Unit) {
+
+
+
+    private fun revertTranslateTransition(node: Node, distance: Double, onFinish: () -> Unit) {
         node.toBack()
 
         val tt = TranslateTransition(Duration.millis(1.0), node)
         tt.cycleCount = 1
-        tt.byY = 50.0
+//        tt.byY = 50.0     // revert the distance moved...
         tt.onFinished = EventHandler {
             onFinish()
         }
