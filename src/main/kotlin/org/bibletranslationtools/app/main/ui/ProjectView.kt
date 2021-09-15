@@ -5,11 +5,14 @@ import javafx.beans.property.SimpleStringProperty
 import javafx.event.EventHandler
 import javafx.geometry.Pos
 import javafx.scene.Node
+import javafx.scene.image.Image
+import javafx.scene.image.WritableImage
 import javafx.scene.text.FontWeight
 import javafx.util.Duration
 import org.kordamp.ikonli.javafx.FontIcon
 import org.kordamp.ikonli.materialdesign.MaterialDesign
 import tornadofx.*
+import java.io.FileInputStream
 
 class ProjectView : View() {
 
@@ -24,12 +27,8 @@ class ProjectView : View() {
         }
     }
     private val navigator: Navigator by inject()
-    private val takeList = //listOf(ListItemView("take 1"))
-        listOf("take 1", "take 2", "take 3", "take 4", "take 5", "take 6")
-            .map { ListItemNode(it) }
-
     private val mainViewModel = find<MainViewModel>()
-    private val listData = takeList.toObservable()
+    private var animating = false
 
     override val root = vbox {
         spacing = 20.0
@@ -42,43 +41,39 @@ class ProjectView : View() {
             }
         }
 
-        listview(listData) {
-
-            prefHeight = 500.0
-//            setCellFactory {
-//                ListItemView()
-//            }
-
+        hbox {
+            add(
+                imageview {
+                    fitWidth = 200.0
+                    fitHeight = 50.0
+                    image = Image(FileInputStream("D:\\Downloads\\wav1.png"))
+                }
+            )
+            add(
+                imageview {
+                    fitWidth = 200.0
+                    fitHeight = 50.0
+                    image = Image(FileInputStream("D:\\Downloads\\wav2.jpg"))
+                }
+            )
+            add(
+                imageview {
+                    fitWidth = 200.0
+                    fitHeight = 50.0
+                    image = Image(FileInputStream("D:\\Downloads\\wav3.png"))
+                }
+            )
             onMouseClicked = EventHandler {
-                val index = this.selectionModel.selectedIndex
-                val selectedItem = this.selectedItem
-
-                listData.forEach {
-                    if (listData.indexOf(it) < index) {
-                        moveNodeDown(it as Node) { }
-                    }
-                }
-
-                this.selectionModel.select(-1)
-
-                moveNodeToTop(selectedItem as Node) {
-                    listData.removeAt(index)
-                    listData.add(0, selectedItem)
-                    this.selectionModel.select(0)
-                    this.refresh()
-                }
-
-
-            }
-        }
-
-        button("Reset").apply {
-            graphic = FontIcon(MaterialDesign.MDI_FILE)
-            setOnAction {
-//                mainViewModel.activeBookProperty.set("Genesis")
-//                navigator.dock<ChapterView>()
-                listData.clear()
-                listData.addAll(takeList)
+//                if (animating) {
+//                    return@EventHandler
+//                }
+//                animating = true
+                moveNode(this as Node)
+                this.add(imageview {
+                    fitWidth = 200.0
+                    fitHeight = 50.0
+                    image = Image(FileInputStream("D:\\Downloads\\wav3.png"))
+                })
             }
         }
     }
@@ -100,37 +95,19 @@ class ProjectView : View() {
         ft.play()
     }
 
-
-
-    private fun moveNodeToTop(node: Node, onFinish: () -> Unit) {
-//        node.toFront()
-        node.viewOrder = 0.0
-
-        val parentY = node.parent.layoutY
-        val tt = TranslateTransition(Duration.millis(700.0), node)
-        tt.cycleCount = 1
-        tt.toY = -parentY   // this will move to the top edge of the parent (list view)
-        tt.isAutoReverse = false
-        tt.onFinished = EventHandler {
-            onFinish()
-            revertTranslateTransition(node) { }
-        }
-        tt.play()
-    }
-
-    private fun moveNodeDown(node: Node, onFinish: () -> Unit) {
+    private fun moveNode(node: Node) {
         node.toFront()
-        val distance = 40.0
-        val tt = TranslateTransition(Duration.millis(600.0), node)
+        val distance = 200.0
+        val tt = TranslateTransition(Duration.millis(2000.0), node)
         tt.cycleCount = 1
-        tt.byY = distance
+        tt.byX = -distance
+//        tt.isAutoReverse = true
         tt.onFinished = EventHandler {
 //            onFinish()
-            revertTranslateTransition(node) { }
+            animating = false
         }
         tt.play()
     }
-
 
     private fun revertTranslateTransition(node: Node, onFinish: () -> Unit) {
         val distance = node.translateY
