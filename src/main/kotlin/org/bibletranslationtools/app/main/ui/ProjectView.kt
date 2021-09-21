@@ -3,9 +3,12 @@ package org.bibletranslationtools.app.main.ui
 import javafx.animation.*
 import javafx.beans.property.SimpleStringProperty
 import javafx.event.EventHandler
+import javafx.geometry.Orientation
 import javafx.geometry.Pos
+import javafx.scene.CacheHint
 import javafx.scene.Node
 import javafx.scene.image.Image
+import javafx.scene.image.ImageView
 import javafx.scene.image.WritableImage
 import javafx.scene.text.FontWeight
 import javafx.util.Duration
@@ -17,18 +20,16 @@ import java.io.FileInputStream
 class ProjectView : View() {
 
     private val nameProperty = SimpleStringProperty()
-
-    private val breadCrumb = BreadCrumb().apply {
-        titleProperty.bind(this@ProjectView.nameProperty)
-        activeTitleProperty.set("Project")
-        iconProperty.set(FontIcon(MaterialDesign.MDI_BOOK))
-        onClickAction {
-            navigator.dock<ProjectView>()
-        }
-    }
     private val navigator: Navigator by inject()
     private val mainViewModel = find<MainViewModel>()
     private var animating = false
+    private var dragContextX = 0.0
+
+    val listData = observableListOf<ImageView>()
+
+    init {
+
+    }
 
     override val root = vbox {
         spacing = 20.0
@@ -42,57 +43,58 @@ class ProjectView : View() {
         }
 
         hbox {
-            add(
-                imageview {
-                    fitWidth = 200.0
-                    fitHeight = 50.0
-                    image = Image(FileInputStream("D:\\Downloads\\wav1.png"))
-                }
-            )
-            add(
-                imageview {
-                    fitWidth = 200.0
-                    fitHeight = 50.0
-                    image = Image(FileInputStream("D:\\Downloads\\wav2.jpg"))
-                }
-            )
-            add(
-                imageview {
-                    fitWidth = 200.0
-                    fitHeight = 50.0
-                    image = Image(FileInputStream("D:\\Downloads\\wav3.png"))
-                }
-            )
-            onMouseClicked = EventHandler {
-//                if (animating) {
-//                    return@EventHandler
+            fitToParentWidth()
+            fitToParentHeight()
+            repeat(250) {
+
+                add(
+                    imageview {
+                        if (it > 2) {
+                            isVisible = false
+                        }
+//                        isCache = true
+//                        isCacheShape = true
+//                        cacheHint = CacheHint.SPEED
+                        fitWidth = 200.0
+                        fitHeight = 250.0
+                        image = Image(FileInputStream("D:\\Downloads\\wav1.png"))
+                    }
+                )
+            }
+//            add(
+//                imageview {
+//                    fitWidth = 200.0
+//                    fitHeight = 50.0
+//                    image = Image(FileInputStream("D:\\Downloads\\wav2.jpg"))
 //                }
-//                animating = true
-                moveNode(this as Node)
-                this.add(imageview {
-                    fitWidth = 200.0
-                    fitHeight = 50.0
-                    image = Image(FileInputStream("D:\\Downloads\\wav3.png"))
-                })
+//            )
+//            add(
+//                imageview {
+//                    fitWidth = 200.0
+//                    fitHeight = 50.0
+//                    image = Image(FileInputStream("D:\\Downloads\\wav3.png"))
+//                }
+//            )
+
+            onMousePressed = EventHandler {
+                val node = it.source as Node
+                dragContextX = node.translateX - it.sceneX
+                println("Press: " + dragContextX)
+            }
+
+            onMouseDragged = EventHandler {
+                val node = it.source as Node
+                node.translateX = dragContextX + it.sceneX
+                println(node.translateX)
+            }
+            onMouseReleased = EventHandler {
+                println("Released at " + it.sceneX)
             }
         }
     }
 
     init {
         nameProperty.bind(mainViewModel.activeBookProperty)
-    }
-
-    private fun fadeTransition(node: Node, onFinish: () -> Unit) {
-        val ft = FadeTransition(Duration.millis(800.0), node)
-        ft.fromValue = 1.0
-        ft.toValue = 0.0
-        ft.cycleCount = 2
-        ft.isAutoReverse = true
-        ft.onFinished = EventHandler {
-            onFinish()
-//            ft.stop()
-        }
-        ft.play()
     }
 
     private fun moveNode(node: Node) {
