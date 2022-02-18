@@ -17,11 +17,6 @@ class RootView : View() {
     var userInput: TextField by singleAssign()
     val database = File ("ContributorDB.txt")
 
-    while ()
-    {
-
-    }
-
     override val root = vbox {
         userInput = textfield()
 
