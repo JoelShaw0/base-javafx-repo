@@ -11,4 +11,8 @@ class ContributorRepository {
     fun add(contributor: Contributor) {
 
     }
+
+    fun addAll(contributors: List<Contributor>) {
+
+    }
 }
