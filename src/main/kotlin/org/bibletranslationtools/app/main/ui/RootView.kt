@@ -17,21 +17,28 @@ class RootView : View() {
     var userInput: TextField by singleAssign()
     val database = File ("ContributorDB.txt")
 
+    while ()
+    {
+
+    }
+
     override val root = vbox {
         userInput = textfield()
-        if (database.createNewFile())
-        {
-            println("File Created")
-        }
-        else
-        {
-            println("Already exists")
-        }
+
         listview(list) {
 
         }
 
-        button("Add Contributor") {
+        button("Add Contributor (To beginning)") {
+            setOnAction {
+                list.add(0 ,userInput.text)
+                database.appendText(userInput.text + "\n")
+            }
+            style{
+
+            }
+        }
+        button("Add Contributor (To End)") {
             setOnAction {
                 list.add(userInput.text)
                 database.appendText(userInput.text + "\n")
