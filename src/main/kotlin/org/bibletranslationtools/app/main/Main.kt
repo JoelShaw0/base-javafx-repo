@@ -1,6 +1,8 @@
 package org.bibletranslationtools.app.main
 
 import javafx.stage.Stage
+import org.bibletranslationtools.app.main.entity.Contributor
+import org.bibletranslationtools.app.main.persistence.ContributorRepository
 import org.bibletranslationtools.app.main.ui.RootView
 import tornadofx.*
 
