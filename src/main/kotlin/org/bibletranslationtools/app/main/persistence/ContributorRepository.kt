@@ -6,6 +6,7 @@ import org.bibletranslationtools.app.main.entity.Contributor
 import java.io.File
 
 class ContributorRepository {
+    private val jsonFilePath = "contributors.json"
 
     fun getAll(): List<Contributor> {
         return jacksonObjectMapper().readValue(getResourceAsString())
@@ -30,12 +31,10 @@ class ContributorRepository {
     }
 
     private fun getResourceAsString(): String {
-        val path = javaClass.classLoader.getResource("contributors.json").file
-        return File(path).readText()
+        return File(jsonFilePath).readText()
     }
 
     private fun writeJsonToResource(json: String) {
-        val path = javaClass.classLoader.getResource("contributors.json").file
-        File(path).writeText(json)
+        File(jsonFilePath).writeText(json)
     }
 }
