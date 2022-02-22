@@ -6,7 +6,7 @@ import org.bibletranslationtools.app.main.entity.Contributor
 import java.io.File
 
 class ContributorRepository {
-    private val jsonFilePath = "contributors.json"
+    private val jsonFilePath = "/your/json/file.json"
 
     fun getAll(): List<Contributor> {
         return jacksonObjectMapper().readValue(getResourceAsString())
