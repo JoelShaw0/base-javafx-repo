@@ -18,7 +18,8 @@ class ContributorListViewModel: ViewModel() {
         }
     }
 
-    fun addContributor(contributor: Contributor) {
+    fun addContributor(name: String, projectId: Int) {
+        val contributor = Contributor(name.trim(), projectId)
         contributorList.add(0, contributor)
     }
 }
