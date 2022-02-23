@@ -1,13 +1,20 @@
 package org.bibletranslationtools.app.main.ui
 
+import javafx.geometry.Pos
+import javafx.geometry.VPos
+import javafx.scene.control.TextField
+import org.bibletranslationtools.app.main.viewmodel.ContributorListViewModel
+import org.kordamp.ikonli.javafx.FontIcon
+import org.kordamp.ikonli.material.Material
 import tornadofx.*
-//import java.awt.TextField
 import javafx.scene.control.TextField
 import java.io.File
-//import com.google.gson.Gson
-//import com.google.gson.GsonBuilder
 
 class RootView : View() {
+    private val viewModel: ContributorListViewModel by inject()
+    private lateinit var nameInput: TextField
+    private val projectId = 1
+
     init {
         importStylesheet(javaClass.getResource("/css/my.css").toExternalForm())
         workspace.header.removeFromParent()
@@ -18,28 +25,54 @@ class RootView : View() {
     val database = File ("ContributorDB.txt")
 
     override val root = vbox {
-        userInput = textfield()
+        addClass("contributor__region")
 
-        listview(list) {
-
+        vbox {
+            label("License Information") {
+                addClass("contributor__section-heading")
+            }
+            textflow{
+                text("By exporting this project, you agree to release your work under a ")
+                hyperlink("Creative Commons - Attribution-ShareAlike 4.0 International - CC BY-SA.4.0") {
+                    isWrapText = true
+                }
+                text("licence")
+            }
         }
 
-        button("Add Contributor (To beginning)") {
-            setOnAction {
-                list.add(0 ,userInput.text)
-                database.appendText(userInput.text + "\n")
+        vbox {
+            label("Contributor Information") {
+                addClass("contributor__section-heading")
             }
-            style{
-
+            label("Please include the names or pseudonyms of everyone who contributed to this project") {
+                isWrapText = true
             }
         }
-        button("Add Contributor (To End)") {
-            setOnAction {
-                list.add(userInput.text)
-                database.appendText(userInput.text + "\n")
-            }
-            style{
 
+        hbox {
+            addClass("contributor__input-group")
+
+            alignment = Pos.CENTER_LEFT
+            textfield(viewModel.nameInputProperty) {
+                addClass("contributor__name-input")
+            }
+            button("Add") {
+                addClass("contributor__add-btn")
+                graphic = FontIcon(Material.ADD)
+                setOnAction {
+                    viewModel.addContributor()
+                }
+            }
+        }
+
+        listview(viewModel.contributorList) {
+            addClass("contributor-list")
+
+            isMouseTransparent = true
+            isFocusTraversable = false
+
+            setCellFactory {
+                ContributorListCell()
             }
         }
     }
