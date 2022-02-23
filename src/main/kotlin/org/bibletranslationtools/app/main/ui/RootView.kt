@@ -47,16 +47,14 @@ class RootView : View() {
             addClass("contributor__input-group")
 
             alignment = Pos.CENTER_LEFT
-            textfield {
+            textfield(viewModel.nameInputProperty) {
                 addClass("contributor__name-input")
-                nameInput = this
             }
             button("Add") {
                 addClass("contributor__add-btn")
                 graphic = FontIcon(Material.ADD)
                 setOnAction {
-                    if (nameInput.text.isNotBlank())
-                    viewModel.addContributor(nameInput.text, projectId)
+                    viewModel.addContributor()
                 }
             }
         }

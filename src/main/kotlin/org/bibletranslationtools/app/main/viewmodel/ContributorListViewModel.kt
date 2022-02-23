@@ -1,5 +1,6 @@
 package org.bibletranslationtools.app.main.viewmodel
 
+import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleStringProperty
 import org.bibletranslationtools.app.main.entity.Contributor
 import org.bibletranslationtools.app.main.persistence.ContributorRepository
@@ -9,6 +10,7 @@ class ContributorListViewModel: ViewModel() {
     private val contributorRepo: ContributorRepository = ContributorRepository()
 
     val nameInputProperty = SimpleStringProperty()
+    val projectIdProperty = SimpleIntegerProperty(1)
     val contributorList = observableListOf<Contributor>()
 
     init {
@@ -18,8 +20,16 @@ class ContributorListViewModel: ViewModel() {
         }
     }
 
-    fun addContributor(name: String, projectId: Int) {
-        val contributor = Contributor(name.trim(), projectId)
-        contributorList.add(0, contributor)
+    // use case to ADD a contributor
+    fun addContributor() {
+        nameInputProperty.value.let {
+            if (it.isNotBlank()) {
+                val contributor = Contributor(
+                    nameInputProperty.value.trim(),
+                    projectIdProperty.value
+                )
+                contributorList.add(0, contributor)
+            }
+        }
     }
 }

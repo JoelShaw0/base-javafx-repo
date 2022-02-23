@@ -23,6 +23,7 @@
 
 .contributor__add-btn,
 .contributor__add-btn .ikonli-font-icon {
+    -fx-font-size: 1.3em;
     -fx-text-fill:  #00377C;
     -fx-icon-color:  #00377C;
 }
@@ -34,6 +35,6 @@
 }
 .contributor-list__cell .label {
     -fx-font-size: 1.2em;
-    -fx-text-fill: #808080;
+    -fx-text-fill: #707070;
 }
 

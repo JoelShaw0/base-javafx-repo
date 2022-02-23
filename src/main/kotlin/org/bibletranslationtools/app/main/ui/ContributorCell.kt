@@ -6,6 +6,7 @@ import javafx.scene.layout.HBox
 import org.bibletranslationtools.app.main.entity.Contributor
 import tornadofx.*
 
+/** List cell combines UI and data to render */
 class ContributorListCell : ListCell<Contributor>() {
     private val cellGraphic = ContributorCell()
 
@@ -23,6 +24,7 @@ class ContributorListCell : ListCell<Contributor>() {
     }
 }
 
+/** Cell's UI element */
 class ContributorCell : HBox() {
     val name = SimpleStringProperty()
 
