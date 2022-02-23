@@ -7,7 +7,6 @@ import org.bibletranslationtools.app.main.viewmodel.ContributorListViewModel
 import org.kordamp.ikonli.javafx.FontIcon
 import org.kordamp.ikonli.material.Material
 import tornadofx.*
-import javafx.scene.control.TextField
 import java.io.File
 
 class RootView : View() {
